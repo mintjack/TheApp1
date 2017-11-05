@@ -1,21 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mintellany.theapp2">
 
-    <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
+    <application
+        android:theme="@style/AppTheme"
+        android:label="@string/app_name"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:allowBackup="true">
+        <activity android:name=".ActivityAlarmClock" android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"></action>
+                <category android:name="android.intent.category.LAUNCHER"></category>
             </intent-filter>
         </activity>
+        <activity android:name="ActivityAlarmNotification" android:launchMode="singleInstance" android:screenOrientation="portrait"></activity>
+        <activity android:name="ActivityAlarmSettings" android:finishOnTaskLaunch="true"></activity>
+        <activity android:name="ActivityAppSettings" android:finishOnTaskLaunch="true"></activity>
+        <activity android:name="ActivityPendingAlarms" android:finishOnTaskLaunch="true"></activity>
+        <service android:name="AlarmClockService"></service>
+        <service android:name="NotificationService"></service>
+        <receiver android:name="ReceiverAlarm"></receiver>
+        <receiver android:name="ReceiverNotificationRefresh"></receiver>
+        <receiver android:name="ReceiverDeviceBoot">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".ReceiverTimeZoneChange">
+            <intent-filter>
+                <action android:name="android.intent.action.TIMEZONE_CHANGED"></action>
+            </intent-filter>
+        </receiver>
     </application>
+
 
 </manifest>
