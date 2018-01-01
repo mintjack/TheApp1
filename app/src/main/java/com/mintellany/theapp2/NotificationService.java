@@ -208,7 +208,8 @@ public class NotificationService extends Service {
         } catch (NoAlarmsException e) {
           return;
         }
-        notification.setLatestEventInfo(getApplicationContext(), notifyText, "", notificationActivity);
+        //commented out next line as notification is deprecated - SK
+        //notification.setLatestEventInfo(getApplicationContext(), notifyText, "", notificationActivity);
         if (notification.icon == R.drawable.alarmclock_notification) {
           notification.icon = R.drawable.alarmclock_notification2;
         } else {

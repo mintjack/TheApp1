@@ -15,15 +15,21 @@
 
 package com.mintellany.theapp2;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,7 +49,11 @@ import java.util.Calendar;
  * clicking on the clock will trigger a dialog for enabling/disabling 'debug
  * mode.'
  */
+
 public final class ActivityAlarmClock extends Activity {
+
+  private static final int PERMISSION_REQUEST_CODE = 1;
+
   private enum Dialogs { TIME_PICKER, DELETE_CONFIRM };
   private enum Menus { DELETE_ALL, DEFAULT_ALARM_SETTINGS, APP_SETTINGS };
 
@@ -60,8 +70,19 @@ public final class ActivityAlarmClock extends Activity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.alarm_list);
+  //TODO here, trying to make it work on Android 6 and up
 
+    //Check whether the app is installed on Android 6.0 or higher//
+
+    if (Build.VERSION.SDK_INT >= 23) {
+      if (checkPermission()) {
+        Log.e("permission", "Permission already granted.");
+        System.out.println("permission already granted");
+      } else {
+        requestPermission();
+      }
+    }
+    setContentView(R.layout.alarm_list);
     // Access to in-memory and persistent data structures.
     service = new AlarmClockServiceBinder(getApplicationContext());
     db = new DbAccessor(getApplicationContext());
@@ -287,4 +308,26 @@ public final class ActivityAlarmClock extends Activity {
         return super.onCreateDialog(id);
     }
   }
+
+
+  private boolean checkPermission() {
+    //Check for READ_EXTERNAL_STORAGE access, using ContextCompat.checkSelfPermission()//
+    int result = ContextCompat.checkSelfPermission(ActivityAlarmClock.this, Manifest.permission.WRITE_SETTINGS);
+    System.out.println("check permission result: " + result);
+    //If the app does have this permission, then return true//
+    if (result == PackageManager.PERMISSION_GRANTED) {
+      return true;
+    } else {
+      //If the app doesn’t have this permission, then return false//
+      return false;
+    }
+  }
+
+  private void requestPermission() {
+  System.out.println("in request permission");
+    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_SETTINGS}, PERMISSION_REQUEST_CODE);
+    int result = ContextCompat.checkSelfPermission(ActivityAlarmClock.this, Manifest.permission.WRITE_SETTINGS);
+    System.out.println("check permission result: " + result);
+  }
 }
+

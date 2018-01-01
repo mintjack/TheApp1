@@ -152,7 +152,8 @@ public final class AlarmClockService extends Service {
         notificationIntent, 0);
 
     Context c = getApplicationContext();
-    notification.setLatestEventInfo(c, getString(R.string.app_name), nextString, launch);
+    //commented out next line as notification is deprecated - SK
+    //notification.setLatestEventInfo(c, getString(R.string.app_name), nextString, launch);
 
     final NotificationManager manager =
       (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
